@@ -1,26 +1,43 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Ionicons } from '@expo/vector-icons';
 
-// Import our pages
 import HomePage from './app/components/HomePage';
 import ProfilePage from './app/components/ProfilePage';
 import GalleryPage from './app/components/GalleryPage';
 import TasksPage from './app/components/TasksPage';
 import AboutPage from './app/components/AboutPage';
 import ContactPage from './app/components/ContactPage';
+import Login from './app/components/LoginPage';
+import Signup from './app/components/SignUpPage';
 
 const Tab = createBottomTabNavigator();
 
 export default function App() {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [showSignup, setShowSignup] = useState(false);
+
+  if (!isLoggedIn) {
+    return showSignup ? (
+      <Signup
+        onSignUpSuccess={() => setIsLoggedIn(true)}
+        onSwitchToLogin={() => setShowSignup(false)}
+      />
+    ) : (
+      <Login
+        onLoginSuccess={() => setIsLoggedIn(true)}
+        onSwitchToSignup={() => setShowSignup(true)}
+      />
+    );
+  }
+
   return (
     <NavigationContainer>
       <Tab.Navigator
         screenOptions={({ route }) => ({
           tabBarIcon: ({ focused, color, size }) => {
             let iconName;
-
             switch (route.name) {
               case 'Home':
                 iconName = focused ? 'home' : 'home-outline';
